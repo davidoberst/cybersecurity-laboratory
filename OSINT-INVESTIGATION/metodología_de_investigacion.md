@@ -38,23 +38,3 @@ Los delincuentes cibernéticos pueden utilizar estos datos públicos para divers
 
 Por ejemplo, podrían usar información personal de las redes sociales para crear correos electrónicos de phishing personalizados que convenzan a los lectores de hacer clic en un enlace malicioso. O realizar una búsqueda en Google con comandos específicos que revelen debilidades de seguridad en una aplicación web, una práctica llamada “Google dorking”. También pueden evadir la detección durante un intento de hackeo luego de revisar los activos públicos de una empresa que describen sus estrategias de defensa de ciberseguridad.
 
-## Google Dorking :
-
-Google hacking, también llamado Google dorking, es una técnica en informática que utiliza operadores para filtrar información en el buscador de Google.
-Google hacking implica el uso de operadores avanzados de Google en su motor de búsqueda para localizar cadenas específicas de texto dentro de los resultados de búsqueda
-Google Dorks es una técnica avanzada utilizada en la Inteligencia de Fuentes Abiertas (OSINT) para encontrar información específica y sensible en la web utilizando consultas de búsqueda especializadas en el motor de búsqueda de Google.Esta técnica aprovecha los operadores de búsqueda avanzados de Google para filtrar y refinar los resultados de búsqueda, permitiendo a los investigadores localizar archivos, datos personales, vulnerabilidades en sitios web y otra información que no es fácilmente visible a través de búsquedas convencionales.
-
-Para profesionales y analistas que utilizan OSINT, las Google Dorks ofrecen un método poderoso para:
-
-    Descubrimiento de Información Sensible: Localizar información sensible o confidencial expuesta accidentalmente en la web, como documentos internos, configuraciones de bases de datos y datos personales.
-
-    Identificación de Vulnerabilidades: Encontrar vulnerabilidades en sitios web y aplicaciones web, como páginas de administración accesibles sin autenticación o directorios indebidamente expuestos.
-
-    Recolección de Inteligencia sobre Objetivos: Recopilar información detallada sobre individuos, organizaciones o sistemas, que puede ser utilizada para fines de investigación, verificación de antecedentes o análisis competitivo.
-
-
-
-
-
-
-
