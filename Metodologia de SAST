@@ -1,0 +1,101 @@
+# Metodología SAST para código fuente
+
+Herramientas gratuitas y de terminal para análisis de secretos, dependencias (CVEs) y vulnerabilidades en código fuente multilenguaje.
+
+---
+
+## Fase 1. Secretos y credenciales
+
+**Objetivo:** encontrar llaves, tokens y contraseñas, tanto en el estado actual como en el historial de Git.
+
+| Herramienta | Comando |
+|---|---|
+| Gitleaks | `gitleaks detect --source . --log-opts="--all" -r resultados/gitleaks.json` |
+| TruffleHog (OSS) | `trufflehog git file://. --only-verified --json > resultados/trufflehog.json` |
+| Trivy | `trivy fs --scanners secret -f json -o resultados/trivy-secrets.json .` |
+| detect-secrets | `detect-secrets scan > resultados/.secrets.baseline` |
+
+> TruffleHog con `--only-verified` muestra solo secretos que siguen activos (prioridad alta).
+
+---
+
+## Fase 2. Dependencias y CVEs
+
+### Multilenguaje
+
+| Herramienta | Comando |
+|---|---|
+| OSV-Scanner | `osv-scanner scan -r . --format json > resultados/osv.json` |
+| Trivy | `trivy fs --scanners vuln -f json -o resultados/trivy-vuln.json .` |
+
+### Específicas por ecosistema
+
+| Lenguaje | Herramienta | Comando |
+|---|---|---|
+| Python | pip-audit | `pip-audit -r requirements.txt -f json` |
+| Node.js | npm/yarn/pnpm audit | `npm audit --json` |
+| JS vendorizado (frontend) | Retire.js | `retire --path . --outputformat json` |
+| Go | govulncheck | `govulncheck -json ./...` |
+| Rust | cargo-audit | `cargo audit --json` |
+| Ruby | bundler-audit | `bundle-audit check --update` |
+| PHP | composer audit | `composer audit --format=json` |
+| .NET | dotnet CLI | `dotnet list package --vulnerable --include-transitive` |
+| Java | OSV-Scanner / Trivy | `osv-scanner scan -L pom.xml` |
+
+
+---
+
+## Fase 3. SAST
+
+**Objetivo:** encontrar vulnerabilidades en el código propio (inyecciones, XSS, SSRF, deserialización, crypto débil, etc.).
+
+### Multilenguaje
+
+| Herramienta | Comando |
+|---|---|
+| Semgrep CE | `semgrep scan --metrics=off --config p/default --config p/owasp-top-ten --json -o resultados/semgrep.json .` |
+| DevSkim | `devskim analyze -I . -O resultados/devskim.sarif` |
+| Bearer CLI | `bearer scan . --format json --output resultados/bearer.json` |
+
+### Específicas por lenguaje
+
+| Lenguaje | Herramientas |
+|---|---|
+| Go | gosec, staticcheck |
+| Python | Bandit, Semgrep `p/python` |
+| Java / Kotlin | PMD, SpotBugs + FindSecBugs (requiere compilar) |
+| JavaScript / TypeScript | eslint-plugin-security, njsscan |
+| PHP | Psalm (`--taint-analysis`), PHPStan |
+| Ruby on Rails | Brakeman |
+| C# / .NET | DevSkim, Semgrep `p/csharp` |
+| C / C++ | Flawfinder, cppcheck |
+| Rust | Clippy, cargo-geiger |
+| Android / iOS | mobsfscan |
+
+Comandos rápidos:
+
+```bash
+gosec -fmt=json -out=resultados/gosec.json ./...
+bandit -r . -f json -o resultados/bandit.json
+njsscan . --json -o resultados/njsscan.json
+brakeman -o resultados/brakeman.json
+flawfinder --csv . > resultados/flawfinder.csv
+mobsfscan . --json -o resultados/mobsfscan.json
+```
+
+---
+
+## Fase 4. Revisión manual, triage y priorización
+
+- **Deduplicar:** varias herramientas reportarán el mismo hallazgo.
+- **Validar:** descartar falsos positivos revisando el código y confirmando que el dato de entrada es realmente controlable.
+- **Alcanzabilidad:** confirmar si la dependencia vulnerable se usa de verdad (govulncheck en Go; en otros lenguajes, revisión manual o Semgrep).
+
+---
+
+## Fase 5. Consolidación en reporte
+
+- Unificar resultados (JSON/SARIF) de todas las fases.
+- Por cada hallazgo confirmado: descripción, archivo y línea, evidencia, CWE, severidad, impacto y recomendación.
+
+---
