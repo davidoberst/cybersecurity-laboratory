@@ -1,1 +1,1 @@
-sed -E 's/^\[([^]]+)\].*/\1/' resultsubfinder.txt | sort -u | xargs -P 20 -I{} sh -c 'echo "$(curl -sk -o /dev/null -m 10 -w "%{http_code}" https://{}) {}"' | sort > status.txt
+sed -E 's/^\[([^]]+)\].*/\1/' your-host-list.txt | sort -u | xargs -P 20 -I{} sh -c 'echo "$(curl -sk -o /dev/null -m 10 -w "%{http_code}" https://{}) {}"' | sort > status.txt
